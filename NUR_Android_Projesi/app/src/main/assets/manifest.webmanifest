@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "NUR – Dua & Kur'an",
+  "short_name": "NUR",
+  "description": "Kur'an-ı Kerim, dualar, zikirmatik ve namaz vakitleri",
+  "lang": "tr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#071E18",
+  "theme_color": "#071E18",
+  "icons": [
+    {"src": "icons/nur.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

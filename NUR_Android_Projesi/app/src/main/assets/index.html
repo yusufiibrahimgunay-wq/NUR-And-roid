@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#071E18" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="NUR" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icons/nur.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>NUR – Dua & Kuran</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ==========================================================
+       1. TEMA DEĞİŞKENLERİ & TASARIM SİSTEMİ
+       ========================================================== */
+    :root {
+      --bg-primary: #071E18;
+      --bg-secondary: #0D2C24;
+      --bg-card: #12392F;
+      --bg-card-hover: #174539;
+      --gold-primary: #D4AF37;
+      --gold-light: #F3E5AB;
+      --gold-bright: #F7DF84;
+      --gold-glow: rgba(212, 175, 55, 0.28);
+      --text-main: #FBF9F5;
+      --text-muted: #8EAA9F;
+      --border-color: rgba(212, 175, 55, 0.22);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(7, 30, 24, 0.94);
+      --accent-red: #E05353;
+      --accent-green: #38A169;
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.45);
+      --font-arabic: 'Amiri', serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --arabic-size: 24px;
+      --turkish-size: 14px;
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
+      --safe-top: env(safe-area-inset-top, 16px);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #F4F1EA;
+      --bg-secondary: #EBE5D8;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F8F5EE;
+      --gold-primary: #A88420;
+      --gold-light: #6E5308;
+      --gold-bright: #947214;
+      --gold-glow: rgba(168, 132, 32, 0.16);
+      --text-main: #142823;
+      --text-muted: #5E746C;
+      --border-color: rgba(168, 132, 32, 0.25);
+      --border-light: rgba(0, 0, 0, 0.08);
+      --nav-bg: rgba(244, 241, 234, 0.96);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #app-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background-color: var(--bg-primary);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+      padding-bottom: calc(76px + var(--safe-bottom));
+    }
+
+    .islamic-pattern-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 280px;
+      opacity: 0.06;
+      background-image: radial-gradient(#D4AF37 1.5px, transparent 1.5px), radial-gradient(#D4AF37 1.5px, #071E18 1.5px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Üst Başlık */
+    header.app-header {
+      padding: calc(var(--safe-top) + 12px) 20px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      z-index: 40;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--gold-bright), #8C6D1F);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #071E18;
+      box-shadow: 0 4px 12px var(--gold-glow);
+    }
+
+    .brand-name {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--gold-light), var(--gold-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icon-btn:active {
+      transform: scale(0.92);
+      border-color: var(--gold-primary);
+    }
+
+    /* Sekme Görünümleri */
+    .screen-view {
+      display: none;
+      padding: 16px 20px;
+      animation: fadeIn 0.22s ease-out;
+      z-index: 1;
+    }
+
+    .screen-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Kartlar */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .card-gold-border {
+      border: 1px solid var(--border-color);
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
+    }
+
+    /* Ana Sayfa Öğeleri */
+    .greeting-section {
+      margin-bottom: 18px;
+    }
+    .greeting-subtitle {
+      font-size: 13px;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+    .greeting-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+    .hijri-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Namaz Vakti Geri Sayım Kartı */
+    .prayer-card {
+      background: linear-gradient(135deg, #10382D 0%, #08211A 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      cursor: pointer;
+    }
+    .prayer-info-left span {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .prayer-current-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold-light);
+      margin: 3px 0;
+    }
+    .prayer-countdown {
+      font-size: 13px;
+      color: #A9D1C2;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .prayer-badge {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--gold-primary);
+      padding: 8px 14px;
+      border-radius: 14px;
+      text-align: right;
+    }
+    .prayer-badge .time {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gold-primary);
+    }
+    .prayer-badge .city {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Son Kaldığım Yer Banner */
+    .last-read-banner {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.18), rgba(18, 57, 47, 0.5));
+      border: 1px dashed var(--gold-primary);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      cursor: pointer;
+    }
+    .last-read-banner:active {
+      transform: scale(0.98);
+    }
+
+    /* Hızlı Eylemler */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .quick-action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 14px 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .quick-action-item:active {
+      transform: scale(0.94);
+      border-color: var(--gold-primary);
+    }
+    .quick-action-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quick-action-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* Bölüm Başlıkları */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title i {
+      color: var(--gold-primary);
+    }
+
+    .daily-arabic {
+      font-family: var(--font-arabic);
+      font-size: var(--arabic-size);
+      line-height: 1.8;
+      text-align: right;
+      direction: rtl;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+      border-bottom: 1px dashed var(--border-light);
+      padding-bottom: 10px;
+    }
+    .daily-turkish {
+      font-size: var(--turkish-size);
+      line-height: 1.5;
+      color: var(--text-main);
+    }
+    .daily-source {
+      font-size: 12px;
+      color: var(--gold-primary);
+      margin-top: 10px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Kuran Listesi */
+    .search-input-box {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .search-input-box input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 12px 16px 12px 42px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input-box input:focus {
+      border-color: var(--gold-primary);
+    }
+    .search-input-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .surah-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .surah-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .surah-item:active {
+      transform: scale(0.98);
+      background: var(--bg-card-hover);
+      border-color: var(--gold-primary);
+    }
+    .surah-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .surah-number-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-primary);
+    }
+    .surah-names h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .surah-names span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .surah-arabic-title {
+      font-family: var(--font-arabic);
+      font-size: 21px;
+      color: var(--gold-light);
+    }
+
+    /* Kuran Okuyucu Modalı */
+    .reader-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-primary);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .reader-modal.open {
+      display: flex;
+    }
+    .reader-header {
+      padding: calc(var(--safe-top) + 12px) 16px 12px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .reader-content {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .bismillah-banner {
+      text-align: center;
+      font-family: var(--font-arabic);
+      font-size: 28px;
+      color: var(--gold-primary);
+      margin: 10px 0 16px;
+      direction: rtl;
+    }
+    .ayah-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+    }
+    .ayah-card.marked-last-read {
+      border: 1px solid var(--gold-primary);
+      box-shadow: 0 0 14px var(--gold-glow);
+    }
+    .ayah-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .ayah-number {
+      background: var(--bg-secondary);
+      color: var(--gold-primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .ayah-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .ayah-arabic {
+      font-family: var(--font-arabic);
+      font-size: var(--arabic-size);
+      line-height: 2.1;
+      text-align: right;
+      direction: rtl;
+      color: var(--gold-light);
+      margin-bottom: 12px;
+      word-spacing: 2px;
+    }
+    .ayah-turkish {
+      font-size: var(--turkish-size);
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    /* Dualar */
+    .dua-categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .dua-categories::-webkit-scrollbar {
+      display: none;
+    }
+    .cat-pill {
+      white-space: nowrap;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .cat-pill.active {
+      background: var(--gold-primary);
+      color: #071E18;
+      border-color: var(--gold-primary);
+    }
+    .dua-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .dua-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dua-card:active {
+      border-color: var(--gold-primary);
+    }
+    .dua-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dua-pronounce {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+
+    /* Dua Detay Modalı */
+    .dua-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 120;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .dua-modal.open {
+      display: flex;
+    }
+    .dua-modal-sheet {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-primary);
+      border-top: 2px solid var(--gold-primary);
+      border-radius: 26px 26px 0 0;
+      padding: 24px 20px calc(24px + var(--safe-bottom));
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* Zikirmatik */
+    .tasbih-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+    }
+    .dhikr-select-box {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .target-chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .target-chip {
+      flex: 1;
+      padding: 6px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .target-chip.active {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+    }
+    .tasbih-screen {
+      background: #04120E;
+      border: 2px solid var(--border-color);
+      border-radius: 24px;
+      width: 100%;
+      padding: 22px;
+      text-align: center;
+      box-shadow: inset 0 4px 18px rgba(0,0,0,0.6);
+      margin-bottom: 24px;
+    }
+    .tasbih-lap-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .tasbih-count-display {
+      font-size: 76px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #FFFFFF;
+      text-shadow: 0 0 24px var(--gold-glow);
+      line-height: 1.1;
+      margin: 6px 0;
+    }
+    .tasbih-dhikr-name {
+      font-size: 16px;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .tasbih-tap-btn {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #1A4D3F, #0A261E);
+      border: 6px solid var(--gold-primary);
+      color: var(--gold-light);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.2);
+      transition: all 0.08s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      outline: none;
+    }
+    .tasbih-tap-btn:active {
+      transform: scale(0.92);
+      border-color: #FFFFFF;
+    }
+    .tasbih-controls {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    /* Namaz Vakitleri */
+    .city-picker-box {
+      margin-bottom: 16px;
+    }
+    .custom-select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 600;
+      outline: none;
+    }
+    .times-vertical-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .time-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+    }
+    .time-row.active-time {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.22), var(--bg-card));
+      border-color: var(--gold-primary);
+    }
+    .time-row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .time-row-val {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--gold-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Favoriler */
+    .fav-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .fav-pill {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      border-radius: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .fav-pill.active {
+      background: var(--gold-primary);
+      color: #071E18;
+      border-color: var(--gold-primary);
+    }
+
+    /* Ayarlar */
+    .settings-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+    .slider-range-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 140px;
+    }
+    .slider-range-box input {
+      flex: 1;
+      accent-color: var(--gold-primary);
+    }
+
+    /* Anahtar (Switch) */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      transition: .3s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--gold-primary);
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #0E3E31;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+      background-color: #FFF;
+    }
+
+    /* Alt Navigasyon */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 10px calc(8px + var(--safe-bottom));
+      z-index: 50;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 12px;
+      transition: color 0.2s;
+    }
+    .nav-btn.active {
+      color: var(--gold-primary);
+    }
+    .nav-btn i {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Toast Bildirim */
+    #toast-msg {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--gold-primary);
+      color: #071E18;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 22px;
+      border-radius: 30px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      z-index: 300;
+    }
+    #toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+    <div class="islamic-pattern-bg"></div>
+
+    <!-- ÜST BAŞLIK -->
+    <header class="app-header">
+      <div class="brand-box" onclick="app.switchTab('home')">
+        <div class="brand-logo">
+          <i data-lucide="moon-star" size="20"></i>
+        </div>
+        <span class="brand-name">NUR</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="app.switchTab('favorites')" aria-label="Favoriler">
+          <i data-lucide="bookmark" size="18"></i>
+        </button>
+        <button class="icon-btn" onclick="app.switchTab('settings')" aria-label="Ayarlar">
+          <i data-lucide="settings" size="18"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 1. SEKME: ANA SAYFA -->
+    <main id="tab-home" class="screen-view active">
+      <div class="greeting-section">
+        <div class="greeting-subtitle">Esselâmü Aleyküm</div>
+        <h2 class="greeting-title" id="home-greeting-text">Hayırlı Vakitler</h2>
+        <div class="hijri-date" id="live-hijri-date">Yükleniyor...</div>
+      </div>
+
+      <!-- Namaz Vakti Geri Sayım Kartı -->
+      <div class="prayer-card" onclick="app.switchTab('prayer-times')">
+        <div class="prayer-info-left">
+          <span id="next-prayer-name">SIRADAKİ VAKİT</span>
+          <div class="prayer-current-name" id="next-prayer-title">İkindi</div>
+          <div class="prayer-countdown" id="prayer-countdown-val">Kalan Süre: Hesaplanıyor...</div>
+        </div>
+        <div class="prayer-badge">
+          <div class="time" id="next-prayer-time">15:42</div>
+          <div class="city" id="current-city-label">İstanbul</div>
+        </div>
+      </div>
+
+      <!-- Son Okunan Yer Banner (Varsa Görünür) -->
+      <div class="last-read-banner" id="home-last-read-box" style="display:none;" onclick="app.resumeLastRead()">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i data-lucide="book-marked" size="20" style="color:var(--gold-primary);"></i>
+          <div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">SON OKUDUĞUNUZ YER</div>
+            <div id="home-last-read-text" style="font-size:14px; font-weight:700; color:var(--gold-light);">Fatiha Suresi, 1. Ayet</div>
+          </div>
+        </div>
+        <i data-lucide="chevron-right" size="18" style="color:var(--gold-primary);"></i>
+      </div>
+
+      <!-- Hızlı Erişim Butonları -->
+      <div class="quick-actions-grid">
+        <div class="quick-action-item" onclick="app.switchTab('quran')">
+          <div class="quick-action-icon"><i data-lucide="book-open" size="20"></i></div>
+          <span class="quick-action-label">Kuran</span>
+        </div>
+        <div class="quick-action-item" onclick="app.switchTab('duas')">
+          <div class="quick-action-icon"><i data-lucide="heart-handshake" size="20"></i></div>
+          <span class="quick-action-label">Dualar</span>
+        </div>
+        <div class="quick-action-item" onclick="app.switchTab('tasbih')">
+          <div class="quick-action-icon"><i data-lucide="disc" size="20"></i></div>
+          <span class="quick-action-label">Zikirmatik</span>
+        </div>
+        <div class="quick-action-item" onclick="app.switchTab('prayer-times')">
+          <div class="quick-action-icon"><i data-lucide="compass" size="20"></i></div>
+          <span class="quick-action-label">Vakitler</span>
+        </div>
+      </div>
+
+      <!-- Günün Ayeti -->
+      <div class="section-header">
+        <div class="section-title"><i data-lucide="sparkles" size="18"></i> Günün Ayeti</div>
+        <button class="icon-btn" style="width:32px;height:32px;" onclick="app.shareText('daily-ayah')">
+          <i data-lucide="share-2" size="15"></i>
+        </button>
+      </div>
+      <div class="card card-gold-border daily-quote-card">
+        <div class="daily-arabic" id="daily-verse-ar">فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿٥﴾ إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
+        <div class="daily-turkish" id="daily-verse-tr">"Şüphesiz güçlükle beraber bir kolaylık vardır. Gerçekten, güçlükle beraber bir kolaylık vardır."</div>
+        <div class="daily-source">
+          <span id="daily-verse-ref">İnşirah Suresi, 5-6</span>
+          <button class="icon-btn" style="width:28px;height:28px;" onclick="app.toggleFavoriteCurrentVerse()">
+            <i data-lucide="heart" size="14" id="daily-fav-icon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Günün Duası -->
+      <div class="section-header">
+        <div class="section-title"><i data-lucide="heart" size="18"></i> Günün Duası</div>
+      </div>
+      <div class="card daily-quote-card">
+        <div class="daily-arabic" id="daily-dua-ar">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div>
+        <div class="daily-turkish" id="daily-dua-tr">"Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru."</div>
+        <div class="daily-source">
+          <span>Bakara Suresi, 201</span>
+          <button class="icon-btn" style="width:28px;height:28px;" onclick="app.shareText('daily-dua')">
+            <i data-lucide="share-2" size="14"></i>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- 2. SEKME: KUR'AN-I KERİM (114 SURE) -->
+    <section id="tab-quran" class="screen-view">
+      <div class="last-read-banner" id="quran-last-read-box" style="display:none;" onclick="app.resumeLastRead()">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i data-lucide="bookmark-check" size="20" style="color:var(--gold-primary);"></i>
+          <div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">SON KALINAN YERİ OKU</div>
+            <div id="quran-last-read-text" style="font-size:14px; font-weight:700; color:var(--gold-light);">Sure Adı</div>
+          </div>
+        </div>
+        <span style="font-size:12px; font-weight:700; color:var(--gold-primary);">Devam Et</span>
+      </div>
+
+      <div class="search-input-box">
+        <i data-lucide="search" size="18"></i>
+        <input type="text" id="surah-search" placeholder="Sure adı veya numarası ile ara..." oninput="app.filterSurahs(this.value)" />
+      </div>
+
+      <div class="surah-list" id="surah-list-container">
+        <!-- 114 Sure dinamik listelenir -->
+      </div>
+    </section>
+
+    <!-- KURAN OKUMA EKRANI MODAL -->
+    <div id="quran-reader-modal" class="reader-modal">
+      <div class="reader-header">
+        <button class="icon-btn" onclick="app.closeReader()">
+          <i data-lucide="arrow-left" size="18"></i>
+        </button>
+        <div style="text-align: center;">
+          <h3 id="reader-surah-title" style="font-size:16px; font-weight:800; color:var(--gold-light);">Sure Adı</h3>
+          <span id="reader-surah-meta" style="font-size:11px; color:var(--text-muted);">Mekki • 7 Ayet</span>
+        </div>
+        <button class="icon-btn" onclick="app.bookmarkCurrentSurah()" title="Sureyi Kaydet">
+          <i data-lucide="bookmark" size="18" id="reader-bookmark-icon"></i>
+        </button>
+      </div>
+      <div class="reader-content" id="reader-content-body">
+        <!-- Ayetler burada listelenir -->
+      </div>
+    </div>
+
+    <!-- 3. SEKME: DUALAR -->
+    <section id="tab-duas" class="screen-view">
+      <div class="search-input-box">
+        <i data-lucide="search" size="18"></i>
+        <input type="text" id="dua-search-input" placeholder="Dua ara (şifa, sabah, rızık...)" oninput="app.searchDuas(this.value)" />
+      </div>
+
+      <div class="dua-categories" id="dua-categories-nav">
+        <div class="cat-pill active" onclick="app.filterDuas('all', this)">Tümü</div>
+        <div class="cat-pill" onclick="app.filterDuas('sabah', this)">Sabah</div>
+        <div class="cat-pill" onclick="app.filterDuas('aksam', this)">Akşam</div>
+        <div class="cat-pill" onclick="app.filterDuas('korunma', this)">Korunma</div>
+        <div class="cat-pill" onclick="app.filterDuas('namaz', this)">Namaz</div>
+        <div class="cat-pill" onclick="app.filterDuas('tovbe', this)">Tövbe</div>
+        <div class="cat-pill" onclick="app.filterDuas('sukur', this)">Şükür</div>
+        <div class="cat-pill" onclick="app.filterDuas('sifa', this)">Şifa</div>
+        <div class="cat-pill" onclick="app.filterDuas('rizik', this)">Rızık</div>
+      </div>
+
+      <div class="dua-list" id="duas-list-container">
+        <!-- Sahih Dualar -->
+      </div>
+    </section>
+
+    <!-- DUA DETAY MODAL (AÇILIR KART) -->
+    <div id="dua-detail-modal" class="dua-modal" onclick="if(event.target===this) app.closeDuaDetail()">
+      <div class="dua-modal-sheet">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 id="modal-dua-title" style="font-size:17px; font-weight:800; color:var(--gold-light);">Dua Başlığı</h3>
+          <button class="icon-btn" onclick="app.closeDuaDetail()"><i data-lucide="x" size="18"></i></button>
+        </div>
+        <div class="daily-arabic" id="modal-dua-arabic" style="margin-bottom:14px;"></div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px; line-height:1.5;">
+          <strong>Okunuşu:</strong> <span id="modal-dua-pronounce"></span>
+        </div>
+        <div style="font-size:14px; color:var(--text-main); line-height:1.6; margin-bottom:16px;">
+          <strong>Anlamı / Meali:</strong> <span id="modal-dua-meaning"></span>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="icon-btn" style="flex:1; border-radius:12px; gap:6px; font-weight:700; width:auto;" id="modal-dua-fav-btn" onclick="app.toggleModalDuaFavorite()">
+            <i data-lucide="heart" size="16"></i> Favoriye Ekle
+          </button>
+          <button class="icon-btn" style="flex:1; border-radius:12px; gap:6px; font-weight:700; width:auto;" onclick="app.shareModalDua()">
+            <i data-lucide="share-2" size="16"></i> Paylaş
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SEKME: DİJİTAL ZİKİRMATİK -->
+    <section id="tab-tasbih" class="screen-view">
+      <div class="tasbih-container">
+        <div class="dhikr-select-box">
+          <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:block; font-weight:700;">ZİKİR SEÇİNİZ:</label>
+          <select id="dhikr-selector" class="custom-select" onchange="app.changeDhikr(this.value)">
+            <option value="Sübhanallah">Sübhanallah</option>
+            <option value="Elhamdülillah">Elhamdülillah</option>
+            <option value="Allahu Ekber">Allahu Ekber</option>
+            <option value="Lâ ilâhe illallâh">Lâ ilâhe illallâh</option>
+            <option value="Estağfirullah">Estağfirullah el-Azîm</option>
+            <option value="Salavat">Âllâhümme salli alâ seyyidinâ Muhammed</option>
+            <option value="Lâ havle ve lâ kuvvete illâ billâh">Lâ havle ve lâ kuvvete illâ billâh</option>
+            <option value="Hasbünallahu ve ni'mel vekil">Hasbünallahu ve ni'mel vekil</option>
+          </select>
+
+          <!-- Hedef Seçim Çipleri -->
+          <div class="target-chips">
+            <div class="target-chip active" onclick="app.setTarget(33, this)">33</div>
+            <div class="target-chip" onclick="app.setTarget(99, this)">99</div>
+            <div class="target-chip" onclick="app.setTarget(100, this)">100</div>
+            <div class="target-chip" onclick="app.setTarget(500, this)">500</div>
+            <div class="target-chip" onclick="app.setTarget(0, this)">Serbest</div>
+          </div>
+        </div>
+
+        <div class="tasbih-screen">
+          <div class="tasbih-lap-info">
+            <span id="tasbih-lap-counter">TUR: 1</span>
+            <span id="tasbih-target-label">HEDEF: 33</span>
+          </div>
+          <div class="tasbih-count-display" id="tasbih-counter-num">0</div>
+          <div class="tasbih-dhikr-name" id="tasbih-active-name">Sübhanallah</div>
+        </div>
+
+        <div class="tasbih-button-wrapper">
+          <button class="tasbih-tap-btn" id="tasbih-btn" onclick="app.incrementTasbih()">
+            <i data-lucide="hand" size="36"></i>
+            <span>ZİKİR ÇEK (+1)</span>
+          </button>
+        </div>
+
+        <div class="tasbih-controls">
+          <button class="icon-btn" style="width:50px;height:50px;" onclick="app.resetTasbih()" title="Sıfırla">
+            <i data-lucide="rotate-ccw" size="20"></i>
+          </button>
+          <button class="icon-btn" style="width:50px;height:50px;" id="tasbih-sound-btn" onclick="app.toggleSound()" title="Ses Efekti">
+            <i data-lucide="volume-2" size="20"></i>
+          </button>
+          <button class="icon-btn" style="width:50px;height:50px;" id="tasbih-vib-btn" onclick="app.toggleVibration()" title="Titreşim">
+            <i data-lucide="vibrate" size="20"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SEKME: NAMAZ VAKİTLERİ -->
+    <section id="tab-prayer-times" class="screen-view">
+      <div class="city-picker-box">
+        <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:block; font-weight:700;">ŞEHİR SEÇİNİZ (TÜRKİYE):</label>
+        <select id="city-selector" class="custom-select" onchange="app.changeCity(this.value)">
+          <option value="Istanbul">İstanbul</option>
+          <option value="Ankara">Ankara</option>
+          <option value="Izmir">İzmir</option>
+          <option value="Bursa">Bursa</option>
+          <option value="Antalya">Antalya</option>
+          <option value="Adana">Adana</option>
+          <option value="Konya">Konya</option>
+          <option value="Gaziantep">Gaziantep</option>
+          <option value="Sanliurfa">Şanlıurfa</option>
+          <option value="Kocaeli">Kocaeli</option>
+          <option value="Mersin">Mersin</option>
+          <option value="Diyarbakir">Diyarbakır</option>
+          <option value="Hatay">Hatay</option>
+          <option value="Manisa">Manisa</option>
+          <option value="Kayseri">Kayseri</option>
+          <option value="Samsun">Samsun</option>
+          <option value="Balikesir">Balıkesir</option>
+          <option value="Kahramanmaras">Kahramanmaraş</option>
+          <option value="Van">Van</option>
+          <option value="Aydin">Aydın</option>
+          <option value="Denizli">Denizli</option>
+          <option value="Sakarya">Sakarya</option>
+          <option value="Tekirdag">Tekirdağ</option>
+          <option value="Mugla">Muğla</option>
+          <option value="Eskisehir">Eskişehir</option>
+          <option value="Trabzon">Trabzon</option>
+          <option value="Erzurum">Erzurum</option>
+          <option value="Sivas">Sivas</option>
+          <option value="Malatya">Malatya</option>
+          <option value="Batman">Batman</option>
+        </select>
+      </div>
+
+      <div class="card card-gold-border" style="margin-bottom: 20px; text-align:center;">
+        <span style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">GÜNCEL DURUM</span>
+        <h3 id="current-vakit-label" style="font-size:26px; color:var(--gold-primary); margin:6px 0;">İkindi Vakti</h3>
+        <p id="prayer-remaining-counter" style="font-size:14px; font-weight:600; font-variant-numeric: tabular-nums;">Sıradaki vakte: Hesaplanıyor...</p>
+      </div>
+
+      <div class="times-vertical-list" id="times-list-container">
+        <!-- Vakitler -->
+      </div>
+
+      <div id="prayer-network-status" style="margin-top:12px; font-size:12px; text-align:center; color:var(--text-muted);">
+        Vakitler Diyanet İşleri Başkanlığı takvimine uyumlu hesaplanmaktadır.
+      </div>
+    </section>
+
+    <!-- 6. SEKME: FAVORİLER -->
+    <section id="tab-favorites" class="screen-view">
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:14px;">Kayıtlı Öğeler</h3>
+
+      <div class="fav-filters">
+        <div class="fav-pill active" onclick="app.filterFavorites('all', this)">Tümü</div>
+        <div class="fav-pill" onclick="app.filterFavorites('verse', this)">Ayetler</div>
+        <div class="fav-pill" onclick="app.filterFavorites('dua', this)">Dualar</div>
+      </div>
+
+      <div id="favorites-list-container">
+        <!-- Favoriler listesi -->
+      </div>
+    </section>
+
+    <!-- 7. SEKME: AYARLAR -->
+    <section id="tab-settings" class="screen-view">
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:14px;">Uygulama Ayarları</h3>
+
+      <div class="settings-group">
+        <div class="setting-item">
+          <div>
+            <div style="font-weight:600;">Karanlık Tema</div>
+            <div style="font-size:12px; color:var(--text-muted);">Zümrüt yeşili koyu renk paleti</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle" checked onchange="app.toggleTheme(this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div style="font-weight:600;">Zikir Titreşimi</div>
+            <div style="font-size:12px; color:var(--text-muted);">Haptic dokunmatik geri bildirim</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="vib-toggle" checked onchange="app.toggleSettingVibration(this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div style="font-weight:600;">Namaz Vakti Bildirimleri</div>
+            <div style="font-size:12px; color:var(--text-muted);">Vakit girdiğinde hatırlatıcı al</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif-toggle" onchange="app.toggleNotifications(this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <h4 style="font-size:14px; font-weight:700; color:var(--gold-primary); margin-bottom:8px; text-transform:uppercase;">Yazı Boyutları</h4>
+      <div class="settings-group">
+        <div class="setting-item">
+          <div>
+            <div style="font-weight:600;">Arapça Yazı Boyutu</div>
+            <div style="font-size:12px; color:var(--text-muted);" id="arabic-size-label">24 px</div>
+          </div>
+          <div class="slider-range-box">
+            <input type="range" min="18" max="36" value="24" oninput="app.changeFontSize('arabic', this.value)" />
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div style="font-weight:600;">Türkçe Meal Boyutu</div>
+            <div style="font-size:12px; color:var(--text-muted);" id="turkish-size-label">14 px</div>
+          </div>
+          <div class="slider-range-box">
+            <input type="range" min="12" max="20" value="14" oninput="app.changeFontSize('turkish', this.value)" />
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="setting-item" onclick="app.shareApp()">
+          <div>
+            <div style="font-weight:600;">Uygulamayı Paylaş</div>
+            <div style="font-size:12px; color:var(--text-muted);">Yakınlarınıza tavsiye edin</div>
+          </div>
+          <i data-lucide="share-2" size="18" style="color:var(--gold-primary);"></i>
+        </div>
+
+        <div class="setting-item" onclick="app.resetAllAppData()">
+          <div>
+            <div style="font-weight:600; color:var(--accent-red);">Verileri Sıfırla</div>
+            <div style="font-size:12px; color:var(--text-muted);">Zikir ve ayarları temizle</div>
+          </div>
+          <i data-lucide="trash-2" size="18" style="color:var(--accent-red);"></i>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px; font-size:13px; color:var(--text-muted); line-height:1.6;">
+        <h4 style="color:var(--text-main); font-weight:700; margin-bottom:4px;">NUR – Dua & Kuran</h4>
+        Sürüm 2.0 (Android Production Build)<br />
+        Tüm Kuran-ı Kerim metinleri ve Diyanet İşleri Başkanlığı onaylı mealleri temel alınmıştır.
+      </div>
+    </section>
+
+    <!-- ALT SEKMELİ MENÜ (BOTTOM NAVIGATION) -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="home" onclick="app.switchTab('home')">
+        <i data-lucide="home"></i>
+        <span>Ana Sayfa</span>
+      </button>
+      <button class="nav-btn" data-tab="quran" onclick="app.switchTab('quran')">
+        <i data-lucide="book-open"></i>
+        <span>Kuran</span>
+      </button>
+      <button class="nav-btn" data-tab="duas" onclick="app.switchTab('duas')">
+        <i data-lucide="heart-handshake"></i>
+        <span>Dualar</span>
+      </button>
+      <button class="nav-btn" data-tab="tasbih" onclick="app.switchTab('tasbih')">
+        <i data-lucide="disc"></i>
+        <span>Zikirmatik</span>
+      </button>
+      <button class="nav-btn" data-tab="prayer-times" onclick="app.switchTab('prayer-times')">
+        <i data-lucide="clock"></i>
+        <span>Vakitler</span>
+      </button>
+    </nav>
+
+    <!-- TOAST MESAJI -->
+    <div id="toast-msg">Bildirim</div>
+  </div>
+
+  <!-- ==========================================================
+       JAVASCRIPT MOTORU
+       ========================================================== -->
+  <script>
+    const app = (function () {
+      // 114 Sure Tam Verisi
+      const SURAH_META = [
+        { id: 1, name: "Fâtiha", ar: "الفاتحة", verses: 7, type: "Mekke" },
+        { id: 2, name: "Bakara", ar: "البقرة", verses: 286, type: "Medine" },
+        { id: 3, name: "Âl-i İmrân", ar: "آل عمران", verses: 200, type: "Medine" },
+        { id: 4, name: "Nisâ", ar: "النساء", verses: 176, type: "Medine" },
+        { id: 5, name: "Mâide", ar: "المائدة", verses: 120, type: "Medine" },
+        { id: 6, name: "En'âm", ar: "الأنعام", verses: 165, type: "Mekke" },
+        { id: 7, name: "A'râf", ar: "الأعراف", verses: 206, type: "Mekke" },
+        { id: 8, name: "Enfâl", ar: "الأنفال", verses: 75, type: "Medine" },
+        { id: 9, name: "Tevbe", ar: "التوبة", verses: 129, type: "Medine" },
+        { id: 10, name: "Yûnus", ar: "يونس", verses: 109, type: "Mekke" },
+        { id: 11, name: "Hûd", ar: "هود", verses: 123, type: "Mekke" },
+        { id: 12, name: "Yûsuf", ar: "يوسف", verses: 111, type: "Mekke" },
+        { id: 13, name: "Ra'd", ar: "الرعد", verses: 43, type: "Medine" },
+        { id: 14, name: "İbrâhîm", ar: "إبراهيم", verses: 52, type: "Mekke" },
+        { id: 15, name: "Hicr", ar: "الحجر", verses: 99, type: "Mekke" },
+        { id: 16, name: "Nahl", ar: "النحل", verses: 128, type: "Mekke" },
+        { id: 17, name: "İsrâ", ar: "الإسراء", verses: 111, type: "Mekke" },
+        { id: 18, name: "Kehf", ar: "الكهف", verses: 110, type: "Mekke" },
+        { id: 19, name: "Meryem", ar: "مريم", verses: 98, type: "Mekke" },
+        { id: 20, name: "Tâhâ", ar: "طه", verses: 135, type: "Mekke" },
+        { id: 21, name: "Enbiyâ", ar: "الأنبياء", verses: 112, type: "Mekke" },
+        { id: 22, name: "Hac", ar: "الحج", verses: 78, type: "Medine" },
+        { id: 23, name: "Mü'minûn", ar: "المؤمنون", verses: 118, type: "Mekke" },
+        { id: 24, name: "Nûr", ar: "النور", verses: 64, type: "Medine" },
+        { id: 25, name: "Furkân", ar: "الفرقان", verses: 77, type: "Mekke" },
+        { id: 26, name: "Şuarâ", ar: "الشعراء", verses: 227, type: "Mekke" },
+        { id: 27, name: "Neml", ar: "النمل", verses: 93, type: "Mekke" },
+        { id: 28, name: "Kasas", ar: "القصص", verses: 88, type: "Mekke" },
+        { id: 29, name: "Ankebût", ar: "العنكبوت", verses: 69, type: "Mekke" },
+        { id: 30, name: "Rûm", ar: "الروم", verses: 60, type: "Mekke" },
+        { id: 31, name: "Lokmân", ar: "لقمان", verses: 34, type: "Mekke" },
+        { id: 32, name: "Secde", ar: "السجدة", verses: 30, type: "Mekke" },
+        { id: 33, name: "Ahzâb", ar: "الأحزاب", verses: 73, type: "Medine" },
+        { id: 34, name: "Sebe'", ar: "سبأ", verses: 54, type: "Mekke" },
+        { id: 35, name: "Fâtır", ar: "فاطر", verses: 45, type: "Mekke" },
+        { id: 36, name: "Yâsîn", ar: "يس", verses: 83, type: "Mekke" },
+        { id: 37, name: "Sâffât", ar: "الصافات", verses: 182, type: "Mekke" },
+        { id: 38, name: "Sâd", ar: "ص", verses: 88, type: "Mekke" },
+        { id: 39, name: "Zümer", ar: "الزمر", verses: 75, type: "Mekke" },
+        { id: 40, name: "Mü'min", ar: "غافر", verses: 85, type: "Mekke" },
+        { id: 41, name: "Fussilet", ar: "فصلت", verses: 54, type: "Mekke" },
+        { id: 42, name: "Şûrâ", ar: "الشورى", verses: 53, type: "Mekke" },
+        { id: 43, name: "Zuhruf", ar: "الزخرف", verses: 89, type: "Mekke" },
+        { id: 44, name: "Duhân", ar: "الدخان", verses: 59, type: "Mekke" },
+        { id: 45, name: "Câsiye", ar: "الجاثية", verses: 37, type: "Mekke" },
+        { id: 46, name: "Ahkâf", ar: "الأحقاف", verses: 35, type: "Mekke" },
+        { id: 47, name: "Muhammed", ar: "محمد", verses: 38, type: "Medine" },
+        { id: 48, name: "Fetih", ar: "الفتح", verses: 29, type: "Medine" },
+        { id: 49, name: "Hucurât", ar: "الحجرات", verses: 18, type: "Medine" },
+        { id: 50, name: "Kâf", ar: "ق", verses: 45, type: "Mekke" },
+        { id: 51, name: "Zâriyât", ar: "الذاريات", verses: 60, type: "Mekke" },
+        { id: 52, name: "Tûr", ar: "الطور", verses: 49, type: "Mekke" },
+        { id: 53, name: "Necm", ar: "النجم", verses: 62, type: "Mekke" },
+        { id: 54, name: "Kamer", ar: "القمر", verses: 55, type: "Mekke" },
+        { id: 55, name: "Rahmân", ar: "الرحمن", verses: 78, type: "Medine" },
+        { id: 56, name: "Vâkıa", ar: "الواقعة", verses: 96, type: "Mekke" },
+        { id: 57, name: "Hadîd", ar: "الحديد", verses: 29, type: "Medine" },
+        { id: 58, name: "Mücâdele", ar: "المجادلة", verses: 22, type: "Medine" },
+        { id: 59, name: "Haşr", ar: "الحشر", verses: 24, type: "Medine" },
+        { id: 60, name: "Mümtehine", ar: "الممتحنة", verses: 13, type: "Medine" },
+        { id: 61, name: "Saff", ar: "الصف", verses: 14, type: "Medine" },
+        { id: 62, name: "Cuma", ar: "الجمعة", verses: 11, type: "Medine" },
+        { id: 63, name: "Münâfikûn", ar: "المنافقون", verses: 11, type: "Medine" },
+        { id: 64, name: "Teğâbün", ar: "التغابن", verses: 18, type: "Medine" },
+        { id: 65, name: "Talâk", ar: "الطلاق", verses: 12, type: "Medine" },
+        { id: 66, name: "Tahrîm", ar: "التحريم", verses: 12, type: "Medine" },
+        { id: 67, name: "Mülk", ar: "الملك", verses: 30, type: "Mekke" },
+        { id: 68, name: "Kalem", ar: "القلم", verses: 52, type: "Mekke" },
+        { id: 69, name: "Hâkka", ar: "الحاقة", verses: 52, type: "Mekke" },
+        { id: 70, name: "Meâric", ar: "المعارج", verses: 44, type: "Mekke" },
+        { id: 71, name: "Nûh", ar: "نوح", verses: 28, type: "Mekke" },
+        { id: 72, name: "Cin", ar: "الجن", verses: 28, type: "Mekke" },
+        { id: 73, name: "Müzzemmil", ar: "المزمل", verses: 20, type: "Mekke" },
+        { id: 74, name: "Müddessir", ar: "المدثر", verses: 56, type: "Mekke" },
+        { id: 75, name: "Kıyâme", ar: "القيامة", verses: 40, type: "Mekke" },
+        { id: 76, name: "İnsân", ar: "الإنسان", verses: 31, type: "Medine" },
+        { id: 77, name: "Mürselât", ar: "المرسلات", verses: 50, type: "Mekke" },
+        { id: 78, name: "Nebe'", ar: "النبأ", verses: 40, type: "Mekke" },
+        { id: 79, name: "Nâziât", ar: "النازعات", verses: 46, type: "Mekke" },
+        { id: 80, name: "Abese", ar: "عبس", verses: 42, type: "Mekke" },
+        { id: 81, name: "Tekvîr", ar: "التكوير", verses: 29, type: "Mekke" },
+        { id: 82, name: "İnfitâr", ar: "الانفطار", verses: 19, type: "Mekke" },
+        { id: 83, name: "Mutaffifîn", ar: "المطففين", verses: 36, type: "Mekke" },
+        { id: 84, name: "İnşikâk", ar: "الانشقاق", verses: 25, type: "Mekke" },
+        { id: 85, name: "Bürûc", ar: "البروج", verses: 22, type: "Mekke" },
+        { id: 86, name: "Târık", ar: "الطارق", verses: 17, type: "Mekke" },
+        { id: 87, name: "A'lâ", ar: "الأعلى", verses: 19, type: "Mekke" },
+        { id: 88, name: "Gâşiye", ar: "الغاشية", verses: 26, type: "Mekke" },
+        { id: 89, name: "Fecr", ar: "الفجر", verses: 30, type: "Mekke" },
+        { id: 90, name: "Beled", ar: "البلد", verses: 20, type: "Mekke" },
+        { id: 91, name: "Şems", ar: "الشمس", verses: 15, type: "Mekke" },
+        { id: 92, name: "Leyl", ar: "الليل", verses: 21, type: "Mekke" },
+        { id: 93, name: "Duhâ", ar: "الضحى", verses: 11, type: "Mekke" },
+        { id: 94, name: "İnşirâh", ar: "الشرح", verses: 8, type: "Mekke" },
+        { id: 95, name: "Tîn", ar: "التين", verses: 8, type: "Mekke" },
+        { id: 96, name: "Alak", ar: "العلق", verses: 19, type: "Mekke" },
+        { id: 97, name: "Kadir", ar: "القدر", verses: 5, type: "Mekke" },
+        { id: 98, name: "Beyyine", ar: "البينة", verses: 8, type: "Medine" },
+        { id: 99, name: "Zilzâl", ar: "الزلزلة", verses: 8, type: "Medine" },
+        { id: 100, name: "Âdiyât", ar: "العاديات", verses: 11, type: "Mekke" },
+        { id: 101, name: "Kâria", ar: "القارعة", verses: 11, type: "Mekke" },
+        { id: 102, name: "Tekâsür", ar: "التكاثر", verses: 8, type: "Mekke" },
+        { id: 103, name: "Asr", ar: "العصر", verses: 3, type: "Mekke" },
+        { id: 104, name: "Hümeze", ar: "الهمزة", verses: 9, type: "Mekke" },
+        { id: 105, name: "Fîl", ar: "الفيل", verses: 5, type: "Mekke" },
+        { id: 106, name: "Kureyş", ar: "قريش", verses: 4, type: "Mekke" },
+        { id: 107, name: "Mâûn", ar: "الماعون", verses: 7, type: "Mekke" },
+        { id: 108, name: "Kevser", ar: "الكوثر", verses: 3, type: "Mekke" },
+        { id: 109, name: "Kâfirûn", ar: "الكافرون", verses: 6, type: "Mekke" },
+        { id: 110, name: "Nasr", ar: "النصر", verses: 3, type: "Medine" },
+        { id: 111, name: "Mesed", ar: "المسد", verses: 5, type: "Mekke" },
+        { id: 112, name: "İhlâs", ar: "الإخلاص", verses: 4, type: "Mekke" },
+        { id: 113, name: "Felak", ar: "الفلق", verses: 5, type: "Mekke" },
+        { id: 114, name: "Nâs", ar: "الناس", verses: 6, type: "Mekke" }
+      ];
+
+      // Kapsamlı Sahih Dualar Veritabanı
+      const DUAS_DATA = [
+        {
+          id: 'dua_1',
+          cat: 'sabah',
+          title: 'Seyyidü’l-İstiğfar (Sabahların Efendisi)',
+          ar: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ',
+          pr: 'Allâhümme ente Rabbî lâ ilâhe illâ ente halaktenî ve ene abdüke ve ene alâ ahdike ve va’dike mesteta’tü, eûzü bike min şerri mâ sana’tü.',
+          tr: 'Allahım! Sen benim Rabbimsin. Senden başka hiçbir ilah yoktur. Beni sen yarattın ve ben senin kulunum. Gücüm yettiğince sana verdiğim ahd ve vaad üzereyim. İşlediğim kusurların şerrinden sana sığınırım.'
+        },
+        {
+          id: 'dua_2',
+          cat: 'aksam',
+          title: 'Akşam Tevhid ve Sığınma Duası',
+          ar: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+          pr: 'Emseynâ ve emse’l-mülkü lillâh, ve’l-hamdü lillâh, lâ ilâhe illallâhu vahdehû lâ şerîke leh, lehü’l-mülkü ve lehü’l-hamdü ve hüve alâ külli şey’in kadîr.',
+          tr: 'Akşama erdik, mülk de Allah için akşama erdi. Hamd Allah’a mahsustur. Allah’tan başka ilah yoktur; tektir, ortağı yoktur. Mülk de O’nundur, hamd da O’na mahsustur.'
+        },
+        {
+          id: 'dua_3',
+          cat: 'korunma',
+          title: 'Zarar ve Şerlerden Korunma Duası',
+          ar: 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+          pr: 'Bismillâhillezî lâ yedurru measmihî şey’ün fi’l-ardı ve lâ fi’s-semâ’ ve hüve’s-Semîu’l-Alîm.',
+          tr: 'İsmiyle yerde ve gökte hiçbir şeyin zarar veremeyeceği Allah’ın adıyla. O, her şeyi hakkıyla işitendir, hakkıyla bilendir.'
+        },
+        {
+          id: 'dua_4',
+          cat: 'korunma',
+          title: 'Ayet-el Kürsi (En Büyük Koruma)',
+          ar: 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ',
+          pr: 'Allâhü lâ ilâhe illâ hüve’l-hayyü’l-kayyûm. Lâ te’huzühû sinetün ve lâ nevm. Lehû mâ fi’s-semâvâti ve mâ fi’l-ard.',
+          tr: 'Allah, kendisinden başka hiçbir ilah olmayandır; diridir (Hayy), her an yarattıklarını gözetip durandır (Kayyûm). O’nu ne bir uyuklama tutabilir, ne de uyku.'
+        },
+        {
+          id: 'dua_5',
+          cat: 'namaz',
+          title: 'Rabbena Duası (Namaz Sonları)',
+          ar: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+          pr: 'Rabbenâ âtinâ fi’d-dünyâ haseneten ve fi’l-âhireti haseneten ve kınâ azâbe’n-nâr.',
+          tr: 'Rabbimiz! Bize dünyada da iyilik ve güzellik ver, ahirette de iyilik ve güzellik ver. Bizi cehennem ateşinin azabından koru.'
+        },
+        {
+          id: 'dua_6',
+          cat: 'namaz',
+          title: 'Namazı Dosdoğru Kılma Duası (İbrahim A.S.)',
+          ar: 'رَبِّ اجْعَلْنِي مُقِيمَ الصَّلاَةِ وَمِن ذُرِّيَّتِي رَبَّنَا وَتَقَبَّلْ دُعَاءِ',
+          pr: 'Rabbi’c-alnî mükîme’s-salâti ve min zürriyyetî rabbenâ ve tekabbel düâ.',
+          tr: 'Rabbim! Beni ve neslimden gelecekleri namazı dosdoğru kılanlardan eyle. Rabbimiz! Duamı kabul buyur.'
+        },
+        {
+          id: 'dua_7',
+          cat: 'tovbe',
+          title: 'Hz. Yunus’un Balığın Karnındaki Tövbesi',
+          ar: 'لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
+          pr: 'Lâ ilâhe illâ ente sübhâneke innî küntü mine’z-zâlimîn.',
+          tr: 'Senden başka hiçbir ilah yoktur. Seni tenzih ve tesbih ederim. Şüphesiz ben nefsimi haksızlığa uğratan zalimlerden oldum.'
+        },
+        {
+          id: 'dua_8',
+          cat: 'sukur',
+          title: 'Nimet ve Şükür Teşekkürü',
+          ar: 'الْحَمْدُ لِلَّهِ الَّذِي بِنِعْمَتِهِ تَتِمُّ الصَّالِحَاتُ',
+          pr: 'Elhamdü lillâhillezî bi ni’metihî tetimmü’s-sâlihât.',
+          tr: 'Niyetiyle ve lütfuyla tüm hayır ve güzelliklerin tamamlandığı Allah’a hamdolsun.'
+        },
+        {
+          id: 'dua_9',
+          cat: 'sifa',
+          title: 'Hz. Eyyüb’ün Şifa Duası',
+          ar: 'أَنِّي مَسَّنِيَ الضُّرُّ وَأَنْتَ أَرْحَمُ الرَّاحِمِينَ',
+          pr: 'Ennî messeniye’d-durru ve ente erhamü’r-râhimîn.',
+          tr: 'Başıma bu dert geldi. Sen merhametlilerin en merhametlisisin.'
+        },
+        {
+          id: 'dua_10',
+          cat: 'rizik',
+          title: 'Bereketli ve Helal Rızık Duası',
+          ar: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا',
+          pr: 'Allâhümme innî es’elüke ilmen nâfian, ve rızkan tayyiben, ve amelen mütekabbelâ.',
+          tr: 'Allahım! Senden faydalı ilim, tertemiz helal rızık ve kabul olunmuş amel dilerim.'
+        }
+      ];
+
+      // Uygulama Durumu (State)
+      let state = {
+        city: localStorage.getItem('nur_city') || 'Istanbul',
+        theme: localStorage.getItem('nur_theme') || 'dark',
+        vibrate: localStorage.getItem('nur_vibrate') !== 'false',
+        sound: localStorage.getItem('nur_sound') !== 'false',
+        notifications: localStorage.getItem('nur_notif') === 'true',
+        arabicSize: parseInt(localStorage.getItem('nur_ar_size')) || 24,
+        turkishSize: parseInt(localStorage.getItem('nur_tr_size')) || 14,
+        tasbihCount: parseInt(localStorage.getItem('nur_tasbih_cnt')) || 0,
+        tasbihTarget: parseInt(localStorage.getItem('nur_tasbih_target')) || 33,
+        tasbihLap: parseInt(localStorage.getItem('nur_tasbih_lap')) || 1,
+        currentDhikr: localStorage.getItem('nur_tasbih_name') || 'Sübhanallah',
+        favorites: JSON.parse(localStorage.getItem('nur_favs')) || [],
+        lastRead: JSON.parse(localStorage.getItem('nur_last_read')) || null,
+        currentOpenedSurah: null,
+        activeDuaForModal: null,
+        prayerTimes: null
+      };
+
+      // --- BAŞLATMA ---
+      function init() {
+        lucide.createIcons();
+        applyTheme(state.theme);
+        applyFontSizes();
+        updateHijriDate();
+        renderSurahList(SURAH_META);
+        renderDuasList('all');
+        initTasbih();
+        initPrayerTimes();
+        renderFavorites('all');
+        updateLastReadBanners();
+        setupBackButton();
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const toggle = document.getElementById('theme-toggle');
+        if (toggle) toggle.checked = (theme === 'dark');
+        localStorage.setItem('nur_theme', theme);
+      }
+
+      function toggleTheme(isChecked) {
+        state.theme = isChecked ? 'dark' : 'light';
+        applyTheme(state.theme);
+      }
+
+      function applyFontSizes() {
+        document.documentElement.style.setProperty('--arabic-size', state.arabicSize + 'px');
+        document.documentElement.style.setProperty('--turkish-size', state.turkishSize + 'px');
+        const arLbl = document.getElementById('arabic-size-label');
+        const trLbl = document.getElementById('turkish-size-label');
+        if (arLbl) arLbl.innerText = state.arabicSize + ' px';
+        if (trLbl) trLbl.innerText = state.turkishSize + ' px';
+      }
+
+      function changeFontSize(type, val) {
+        if (type === 'arabic') {
+          state.arabicSize = parseInt(val);
+          localStorage.setItem('nur_ar_size', state.arabicSize);
+        } else {
+          state.turkishSize = parseInt(val);
+          localStorage.setItem('nur_tr_size', state.turkishSize);
+        }
+        applyFontSizes();
+      }
+
+      function switchTab(tabId) {
+        document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+        });
+
+        const targetScreen = document.getElementById('tab-' + tabId);
+        if (targetScreen) {
+          targetScreen.classList.add('active');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      function updateHijriDate() {
+        try {
+          const now = new Date();
+          const options = { calendar: 'islamic-umalqura', day: 'numeric', month: 'long', year: 'numeric' };
+          const hijri = new Intl.DateTimeFormat('tr-TR-u-ca-islamic-umalqura', options).format(now);
+          const greg = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
+          document.getElementById('live-hijri-date').innerText = `${hijri} • ${greg}`;
+        } catch (e) {
+          document.getElementById('live-hijri-date').innerText = '1447 Hicri Yılı';
+        }
+      }
+
+      // --- KURAN MODÜLÜ ---
+      function renderSurahList(list) {
+        const container = document.getElementById('surah-list-container');
+        container.innerHTML = '';
+
+        list.forEach(s => {
+          const item = document.createElement('div');
+          item.className = 'surah-item';
+          item.onclick = () => openSurahReader(s);
+          item.innerHTML = `
+            <div class="surah-left">
+              <div class="surah-number-badge">${s.id}</div>
+              <div class="surah-names">
+                <h4>${s.name}</h4>
+                <span>${s.type} • ${s.verses} Ayet</span>
+              </div>
+            </div>
+            <div class="surah-arabic-title">${s.ar}</div>
+          `;
+          container.appendChild(item);
+        });
+      }
+
+      function filterSurahs(query) {
+        const q = query.toLowerCase().trim();
+        const filtered = SURAH_META.filter(s =>
+          s.name.toLowerCase().includes(q) ||
+          s.id.toString() === q
+        );
+        renderSurahList(filtered);
+      }
+
+      async function openSurahReader(surah, targetAyahNumber = null) {
+        state.currentOpenedSurah = surah;
+        const modal = document.getElementById('quran-reader-modal');
+        const title = document.getElementById('reader-surah-title');
+        const meta = document.getElementById('reader-surah-meta');
+        const body = document.getElementById('reader-content-body');
+
+        title.innerText = `${surah.id}. ${surah.name} Suresi`;
+        meta.innerText = `${surah.type} • ${surah.verses} Ayet`;
+        body.innerHTML = `
+          <div class="bismillah-banner">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+          <div style="text-align:center; padding: 30px; color:var(--text-muted);">
+            <div style="display:inline-block; animation:spin 1s linear infinite; margin-bottom:10px;"><i data-lucide="loader-2" size="28"></i></div>
+            <p>Ayet-i kerimeler yükleniyor...</p>
+          </div>
+        `;
+        modal.classList.add('open');
+        lucide.createIcons();
+
+        // Yer imi simgesini güncelle
+        updateReaderBookmarkIcon(surah.id);
+
+        try {
+          // Canlı Diyanet meali ve orijinal Uthmani Arapça metin
+          const res = await fetch(`https://api.alquran.cloud/v1/surah/${surah.id}/editions/quran-uthmani,tr.diyanet`);
+          if (!res.ok) throw new Error("Ağ hatası");
+          const data = await res.json();
+
+          if (data && data.status === 'OK') {
+            const arVerses = data.data[0].ayahs;
+            const trVerses = data.data[1].ayahs;
+            const combined = arVerses.map((item, idx) => ({
+              num: item.numberInSurah,
+              ar: item.text,
+              tr: trVerses[idx].text
+            }));
+            renderReaderVerses(surah, combined, targetAyahNumber);
+          } else {
+            throw new Error("Veri ayrıştırılamadı");
+          }
+        } catch (err) {
+          // Çevrimdışı hata ve kurtarma durumu
+          body.innerHTML = `
+            <div class="bismillah-banner">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            <div class="card" style="text-align:center; padding:30px;">
+              <i data-lucide="wifi-off" size="32" style="color:var(--gold-primary); margin-bottom:12px;"></i>
+              <p style="font-weight:700; color:var(--gold-light);">Sure metnine şu an erişilemedi.</p>
+              <p style="font-size:13px; color:var(--text-muted); margin:8px 0 16px;">İnternet bağlantınızı kontrol edip tekrar deneyebilirsiniz.</p>
+              <button class="icon-btn" style="width:auto; padding:8px 20px; border-radius:12px; margin:0 auto;" onclick="app.openSurahReader(app.getCurrentSurah())">
+                Yeniden Dene
+              </button>
+            </div>
+          `;
+          lucide.createIcons();
+        }
+      }
+
+      function renderReaderVerses(surah, verses, targetAyahNumber) {
+        const body = document.getElementById('reader-content-body');
+        body.innerHTML = surah.id !== 9 ? `<div class="bismillah-banner">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : '';
+
+        verses.forEach(v => {
+          const isTarget = targetAyahNumber && parseInt(targetAyahNumber) === v.num;
+          const card = document.createElement('div');
+          card.className = `ayah-card ${isTarget ? 'marked-last-read' : ''}`;
+          card.id = `ayah-node-${v.num}`;
+          card.innerHTML = `
+            <div class="ayah-top">
+              <span class="ayah-number">Ayet ${v.num}</span>
+              <div class="ayah-actions">
+                <button class="icon-btn" style="width:30px;height:30px;" onclick="app.setLastReadPosition(${surah.id}, '${surah.name}', ${v.num})" title="Burada Kaldım">
+                  <i data-lucide="bookmark-check" size="14"></i>
+                </button>
+                <button class="icon-btn" style="width:30px;height:30px;" onclick="app.saveAyahFavorite(${surah.id}, '${surah.name}', ${v.num}, \`${v.ar.replace(/`/g, '')}\`, \`${v.tr.replace(/`/g, '')}\`)" title="Favoriye Ekle">
+                  <i data-lucide="heart" size="14"></i>
+                </button>
+                <button class="icon-btn" style="width:30px;height:30px;" onclick="app.shareAyah('${surah.name}', ${v.num}, \`${v.tr.replace(/`/g, '')}\`)" title="Paylaş">
+                  <i data-lucide="share-2" size="14"></i>
+                </button>
+              </div>
+            </div>
+            <div class="ayah-arabic">${v.ar}</div>
+            <div class="ayah-turkish">${v.tr}</div>
+          `;
+          body.appendChild(card);
+        });
+
+        lucide.createIcons();
+
+        if (targetAyahNumber) {
+          setTimeout(() => {
+            const targetEl = document.getElementById(`ayah-node-${targetAyahNumber}`);
+            if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
+        }
+      }
+
+      function closeReader() {
+        document.getElementById('quran-reader-modal').classList.remove('open');
+      }
+
+      function getCurrentSurah() {
+        return state.currentOpenedSurah;
+      }
+
+      function setLastReadPosition(surahId, surahName, ayahNum) {
+        state.lastRead = {
+          surahId: surahId,
+          surahName: surahName,
+          ayah: ayahNum,
+          date: new Date().toLocaleDateString('tr-TR')
+        };
+        localStorage.setItem('nur_last_read', JSON.stringify(state.lastRead));
+        updateLastReadBanners();
+        showToast(`${surahName} ${ayahNum}. Ayet 'Son Kaldığım Yer' olarak işaretlendi.`);
+      }
+
+      function resumeLastRead() {
+        if (!state.lastRead) return;
+        const surah = SURAH_META.find(s => s.id === state.lastRead.surahId);
+        if (surah) {
+          openSurahReader(surah, state.lastRead.ayah);
+        }
+      }
+
+      function updateLastReadBanners() {
+        const homeBox = document.getElementById('home-last-read-box');
+        const quranBox = document.getElementById('quran-last-read-box');
+        const homeTxt = document.getElementById('home-last-read-text');
+        const quranTxt = document.getElementById('quran-last-read-text');
+
+        if (state.lastRead) {
+          const str = `${state.lastRead.surahName} Suresi, ${state.lastRead.ayah}. Ayet`;
+          if (homeBox && homeTxt) {
+            homeBox.style.display = 'flex';
+            homeTxt.innerText = str;
+          }
+          if (quranBox && quranTxt) {
+            quranBox.style.display = 'flex';
+            quranTxt.innerText = str;
+          }
+        }
+      }
+
+      function bookmarkCurrentSurah() {
+        if (!state.currentOpenedSurah) return;
+        const s = state.currentOpenedSurah;
+        const item = {
+          id: `surah_${s.id}`,
+          type: 'surah',
+          title: `${s.id}. ${s.name} Suresi`,
+          desc: `${s.type} döneminde nazil olmuştur, toplam ${s.verses} ayettir.`,
+          surahId: s.id
+        };
+        toggleFavoriteItem(item);
+        updateReaderBookmarkIcon(s.id);
+      }
+
+      function updateReaderBookmarkIcon(surahId) {
+        const icon = document.getElementById('reader-bookmark-icon');
+        if (!icon) return;
+        const isFav = state.favorites.some(f => f.id === `surah_${surahId}`);
+        icon.style.color = isFav ? 'var(--gold-primary)' : 'var(--text-main)';
+      }
+
+      function saveAyahFavorite(surahId, surahName, ayahNum, arText, trText) {
+        const item = {
+          id: `ayah_${surahId}_${ayahNum}`,
+          type: 'verse',
+          title: `${surahName} Suresi, ${ayahNum}. Ayet`,
+          desc: trText,
+          ar: arText,
+          surahId: surahId,
+          ayah: ayahNum
+        };
+        toggleFavoriteItem(item);
+      }
+
+      // --- DUALAR MODÜLÜ ---
+      function renderDuasList(catOrList) {
+        const container = document.getElementById('duas-list-container');
+        container.innerHTML = '';
+
+        let list = [];
+        if (Array.isArray(catOrList)) {
+          list = catOrList;
+        } else {
+          list = catOrList === 'all' ? DUAS_DATA : DUAS_DATA.filter(d => d.cat === catOrList);
+        }
+
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:30px; color:var(--text-muted);">
+              Aradığınız kritere uygun dua bulunamadı.
+            </div>
+          `;
+          return;
+        }
+
+        list.forEach(dua => {
+          const card = document.createElement('div');
+          card.className = 'dua-card';
+          card.onclick = () => openDuaDetail(dua);
+          card.innerHTML = `
+            <div class="dua-card-title">
+              <span>${dua.title}</span>
+              <button class="icon-btn" style="width:30px;height:30px;" onclick="event.stopPropagation(); app.toggleDuaFav('${dua.id}')">
+                <i data-lucide="bookmark" size="14" style="${state.favorites.some(f=>f.id===dua.id)?'color:var(--gold-primary);':''}"></i>
+              </button>
+            </div>
+            <div class="daily-arabic" style="font-size:18px;">${dua.ar}</div>
+            <div class="dua-pronounce"><strong>Okunuşu:</strong> ${dua.pr}</div>
+            <div class="daily-turkish" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+              <strong>Meali:</strong> ${dua.tr}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+
+      function filterDuas(category, el) {
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+        if (el) el.classList.add('active');
+        renderDuasList(category);
+      }
+
+      function searchDuas(query) {
+        const q = query.toLowerCase().trim();
+        const filtered = DUAS_DATA.filter(d =>
+          d.title.toLowerCase().includes(q) ||
+          d.tr.toLowerCase().includes(q) ||
+          d.pr.toLowerCase().includes(q)
+        );
+        renderDuasList(filtered);
+      }
+
+      function openDuaDetail(dua) {
+        state.activeDuaForModal = dua;
+        document.getElementById('modal-dua-title').innerText = dua.title;
+        document.getElementById('modal-dua-arabic').innerText = dua.ar;
+        document.getElementById('modal-dua-pronounce').innerText = dua.pr;
+        document.getElementById('modal-dua-meaning').innerText = dua.tr;
+
+        const isFav = state.favorites.some(f => f.id === dua.id);
+        const favBtn = document.getElementById('modal-dua-fav-btn');
+        favBtn.innerHTML = `<i data-lucide="heart" size="16"></i> ${isFav ? 'Favoriden Çıkar' : 'Favoriye Ekle'}`;
+
+        document.getElementById('dua-detail-modal').classList.add('open');
+        lucide.createIcons();
+      }
+
+      function closeDuaDetail() {
+        document.getElementById('dua-detail-modal').classList.remove('open');
+      }
+
+      function toggleModalDuaFavorite() {
+        if (!state.activeDuaForModal) return;
+        toggleDuaFav(state.activeDuaForModal.id);
+        closeDuaDetail();
+      }
+
+      function shareModalDua() {
+        if (!state.activeDuaForModal) return;
+        const d = state.activeDuaForModal;
+        const text = `${d.title}\n\nArapça: ${d.ar}\n\nOkunuşu: ${d.pr}\n\nAnlamı: ${d.tr}\n\nNUR Uygulamasından Paylaşıldı.`;
+        if (navigator.share) {
+          navigator.share({ title: d.title, text: text });
+        } else {
+          navigator.clipboard.writeText(text);
+          showToast("Dua metni panoya kopyalandı!");
+        }
+      }
+
+      function toggleDuaFav(duaId) {
+        const d = DUAS_DATA.find(x => x.id === duaId);
+        if (!d) return;
+        toggleFavoriteItem({
+          id: d.id,
+          type: 'dua',
+          title: d.title,
+          desc: d.tr
+        });
+        renderDuasList('all');
+      }
+
+      // --- ZİKİRMATİK MODÜLÜ ---
+      function initTasbih() {
+        document.getElementById('tasbih-counter-num').innerText = state.tasbihCount;
+        document.getElementById('tasbih-active-name').innerText = state.currentDhikr;
+        document.getElementById('tasbih-lap-counter').innerText = `TUR: ${state.tasbihLap}`;
+        document.getElementById('tasbih-target-label').innerText = state.tasbihTarget === 0 ? 'SERBEST' : `HEDEF: ${state.tasbihTarget}`;
+        document.getElementById('dhikr-selector').value = state.currentDhikr;
+
+        const vibBtn = document.getElementById('tasbih-vib-btn');
+        if (vibBtn) vibBtn.style.color = state.vibrate ? 'var(--gold-primary)' : 'var(--text-muted)';
+        const sndBtn = document.getElementById('tasbih-sound-btn');
+        if (sndBtn) sndBtn.style.color = state.sound ? 'var(--gold-primary)' : 'var(--text-muted)';
+      }
+
+      function incrementTasbih() {
+        state.tasbihCount++;
+
+        // Haptic titreşim
+        if (state.vibrate && navigator.vibrate) {
+          navigator.vibrate(40);
+        }
+
+        // Ses Efekti (Web Audio API ile native his)
+        if (state.sound) {
+          playBeepSound();
+        }
+
+        // Hedefe ulaşıldı mı?
+        if (state.tasbihTarget > 0 && state.tasbihCount >= state.tasbihTarget) {
+          state.tasbihCount = 0;
+          state.tasbihLap++;
+          localStorage.setItem('nur_tasbih_lap', state.tasbihLap);
+
+          if (state.vibrate && navigator.vibrate) {
+            navigator.vibrate([100, 60, 150]);
+          }
+          showToast(`Tebrikler! ${state.currentDhikr} turunu tamamladınız.`);
+        }
+
+        document.getElementById('tasbih-counter-num').innerText = state.tasbihCount;
+        document.getElementById('tasbih-lap-counter').innerText = `TUR: ${state.tasbihLap}`;
+        localStorage.setItem('nur_tasbih_cnt', state.tasbihCount);
+      }
+
+      function resetTasbih() {
+        state.tasbihCount = 0;
+        state.tasbihLap = 1;
+        document.getElementById('tasbih-counter-num').innerText = 0;
+        document.getElementById('tasbih-lap-counter').innerText = `TUR: 1`;
+        localStorage.setItem('nur_tasbih_cnt', 0);
+        localStorage.setItem('nur_tasbih_lap', 1);
+        showToast("Zikirmatik sıfırlandı.");
+      }
+
+      function changeDhikr(name) {
+        state.currentDhikr = name;
+        state.tasbihCount = 0;
+        localStorage.setItem('nur_tasbih_name', name);
+        localStorage.setItem('nur_tasbih_cnt', 0);
+        document.getElementById('tasbih-active-name').innerText = name;
+        document.getElementById('tasbih-counter-num').innerText = 0;
+      }
+
+      function setTarget(num, el) {
+        document.querySelectorAll('.target-chip').forEach(c => c.classList.remove('active'));
+        if (el) el.classList.add('active');
+        state.tasbihTarget = num;
+        localStorage.setItem('nur_tasbih_target', num);
+        document.getElementById('tasbih-target-label').innerText = num === 0 ? 'SERBEST' : `HEDEF: ${num}`;
+      }
+
+      function toggleVibration() {
+        state.vibrate = !state.vibrate;
+        localStorage.setItem('nur_vibrate', state.vibrate);
+        const btn = document.getElementById('tasbih-vib-btn');
+        btn.style.color = state.vibrate ? 'var(--gold-primary)' : 'var(--text-muted)';
+        const tog = document.getElementById('vib-toggle');
+        if (tog) tog.checked = state.vibrate;
+        showToast(state.vibrate ? "Titreşim Açık" : "Titreşim Kapalı");
+      }
+
+      function toggleSound() {
+        state.sound = !state.sound;
+        localStorage.setItem('nur_sound', state.sound);
+        const btn = document.getElementById('tasbih-sound-btn');
+        btn.style.color = state.sound ? 'var(--gold-primary)' : 'var(--text-muted)';
+        showToast(state.sound ? "Zikir Sesi Açık" : "Zikir Sesi Kapalı");
+      }
+
+      function playBeepSound() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, ctx.currentTime);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.08);
+        } catch (e) {}
+      }
+
+      // --- NAMAZ VAKİTLERİ MODÜLÜ ---
+      const FALLBACK_PRAYERS = {
+        Imsak: "05:48",
+        Gunes: "07:14",
+        Ogle: "13:08",
+        Ikindi: "16:04",
+        Aksam: "18:49",
+        Yatsi: "20:09"
+      };
+
+      async function initPrayerTimes() {
+        const citySelect = document.getElementById('city-selector');
+        if (citySelect) citySelect.value = state.city;
+        document.getElementById('current-city-label').innerText = state.city;
+
+        try {
+          const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${state.city}&country=Turkey&method=13`);
+          if (!res.ok) throw new Error("Ağ hatası");
+          const data = await res.json();
+          if (data && data.data && data.data.timings) {
+            state.prayerTimes = {
+              Imsak: data.data.timings.Fajr,
+              Gunes: data.data.timings.Sunrise,
+              Ogle: data.data.timings.Dhuhr,
+              Ikindi: data.data.timings.Asr,
+              Aksam: data.data.timings.Maghrib,
+              Yatsi: data.data.timings.Isha
+            };
+          } else {
+            state.prayerTimes = FALLBACK_PRAYERS;
+          }
+        } catch (e) {
+          state.prayerTimes = FALLBACK_PRAYERS;
+          const status = document.getElementById('prayer-network-status');
+          if (status) status.innerText = "Çevrimdışı mod: Kayıtlı vakitler gösterilmektedir.";
+        }
+
+        renderTimesList();
+        runCountdownCycle();
+      }
+
+      function renderTimesList() {
+        const container = document.getElementById('times-list-container');
+        if (!container || !state.prayerTimes) return;
+
+        const labels = {
+          Imsak: { title: "İmsak", icon: "cloud-moon" },
+          Gunes: { title: "Güneş", icon: "sun" },
+          Ogle: { title: "Öğle", icon: "sun-dim" },
+          Ikindi: { title: "İkindi", icon: "sunset" },
+          Aksam: { title: "Akşam", icon: "moon" },
+          Yatsi: { title: "Yatsı", icon: "stars" }
+        };
+
+        container.innerHTML = '';
+        Object.entries(state.prayerTimes).forEach(([key, time]) => {
+          const row = document.createElement('div');
+          row.className = 'time-row';
+          row.id = `prayer-row-${key}`;
+          row.innerHTML = `
+            <div class="time-row-left">
+              <i data-lucide="${labels[key].icon}" size="18" style="color:var(--gold-primary);"></i>
+              <span>${labels[key].title}</span>
+            </div>
+            <div class="time-row-val">${time}</div>
+          `;
+          container.appendChild(row);
+        });
+        lucide.createIcons();
+      }
+
+      function runCountdownCycle() {
+        updatePrayerClock();
+        setInterval(updatePrayerClock, 1000);
+      }
+
+      function updatePrayerClock() {
+        if (!state.prayerTimes) return;
+
+        const now = new Date();
+        const currentMins = now.getHours() * 60 + now.getMinutes();
+
+        const order = [
+          { key: 'Imsak', name: 'İmsak' },
+          { key: 'Gunes', name: 'Güneş' },
+          { key: 'Ogle', name: 'Öğle' },
+          { key: 'Ikindi', name: 'İkindi' },
+          { key: 'Aksam', name: 'Akşam' },
+          { key: 'Yatsi', name: 'Yatsı' }
+        ];
+
+        let next = null;
+        let diffMinutes = 99999;
+
+        for (let item of order) {
+          const [h, m] = state.prayerTimes[item.key].split(':').map(Number);
+          const tMins = h * 60 + m;
+          const diff = tMins - currentMins;
+          if (diff > 0 && diff < diffMinutes) {
+            diffMinutes = diff;
+            next = item;
+            break;
+          }
+        }
+
+        if (!next) {
+          next = order[0];
+          const [h, m] = state.prayerTimes['Imsak'].split(':').map(Number);
+          diffMinutes = (24 * 60 - currentMins) + (h * 60 + m);
+        }
+
+        const hrs = Math.floor(diffMinutes / 60);
+        const mins = diffMinutes % 60;
+        const secs = 59 - now.getSeconds();
+        const formatted = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        document.getElementById('next-prayer-title').innerText = next.name;
+        document.getElementById('next-prayer-time').innerText = state.prayerTimes[next.key];
+        document.getElementById('prayer-countdown-val').innerText = `Kalan: ${formatted}`;
+
+        const subCount = document.getElementById('prayer-remaining-counter');
+        if (subCount) {
+          subCount.innerText = `${next.name} vaktine ${formatted} kaldı`;
+        }
+
+        document.querySelectorAll('.time-row').forEach(r => r.classList.remove('active-time'));
+        const activeRow = document.getElementById(`prayer-row-${next.key}`);
+        if (activeRow) activeRow.classList.add('active-time');
+      }
+
+      function changeCity(city) {
+        state.city = city;
+        localStorage.setItem('nur_city', city);
+        initPrayerTimes();
+        showToast(`${city} namaz vakitleri güncellendi.`);
+      }
+
+      // --- FAVORİLER MODÜLÜ ---
+      function toggleFavoriteItem(item) {
+        const exists = state.favorites.some(f => f.id === item.id);
+        if (exists) {
+          state.favorites = state.favorites.filter(f => f.id !== item.id);
+          showToast("Favorilerden çıkarıldı.");
+        } else {
+          state.favorites.push(item);
+          showToast("Favorilere kaydedildi.");
+        }
+        localStorage.setItem('nur_favs', JSON.stringify(state.favorites));
+        renderFavorites('all');
+      }
+
+      function filterFavorites(type, el) {
+        document.querySelectorAll('.fav-pill').forEach(p => p.classList.remove('active'));
+        if (el) el.classList.add('active');
+        renderFavorites(type);
+      }
+
+      function renderFavorites(type = 'all') {
+        const container = document.getElementById('favorites-list-container');
+        if (!container) return;
+
+        let list = state.favorites;
+        if (type !== 'all') {
+          list = state.favorites.filter(f => f.type === type);
+        }
+
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:50px 20px; color:var(--text-muted);">
+              <i data-lucide="bookmark-minus" size="44" style="color:var(--gold-primary); opacity:0.6; margin-bottom:12px;"></i>
+              <p>Henüz kayıtlı bir ayet veya dua bulunmuyor.</p>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        container.innerHTML = '';
+        list.forEach(f => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h4 style="font-size:15px; font-weight:700; color:var(--gold-light);">${f.title}</h4>
+              <button class="icon-btn" style="width:28px;height:28px; color:var(--accent-red);" onclick="app.removeFavorite('${f.id}')">
+                <i data-lucide="trash-2" size="14"></i>
+              </button>
+            </div>
+            ${f.ar ? `<div class="daily-arabic" style="font-size:18px;">${f.ar}</div>` : ''}
+            <p style="font-size:13px; color:var(--text-main); line-height:1.5;">${f.desc}</p>
+          `;
+          container.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+
+      function removeFavorite(id) {
+        state.favorites = state.favorites.filter(f => f.id !== id);
+        localStorage.setItem('nur_favs', JSON.stringify(state.favorites));
+        renderFavorites('all');
+        showToast("Öğe silindi.");
+      }
+
+      function toggleFavoriteCurrentVerse() {
+        const item = {
+          id: 'verse_daily_inshirah',
+          type: 'verse',
+          title: 'İnşirah Suresi, 5-6. Ayet',
+          ar: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿٥﴾ إِنَّ مَعَ الْعُسْرِ يُسْرًا',
+          desc: 'Şüphesiz güçlükle beraber bir kolaylık vardır. Gerçekten güçlükle beraber bir kolaylık vardır.'
+        };
+        toggleFavoriteItem(item);
+      }
+
+      // --- AYARLAR VE EK ÖZELLİKLER ---
+      function toggleSettingVibration(val) {
+        state.vibrate = val;
+        localStorage.setItem('nur_vibrate', val);
+        const vibBtn = document.getElementById('tasbih-vib-btn');
+        if (vibBtn) vibBtn.style.color = val ? 'var(--gold-primary)' : 'var(--text-muted)';
+      }
+
+      function toggleNotifications(val) {
+        state.notifications = val;
+        localStorage.setItem('nur_notif', val);
+        if (val && 'Notification' in window) {
+          Notification.requestPermission().then(perm => {
+            if (perm === 'granted') {
+              showToast("Namaz vakti bildirimleri aktifleştirildi.");
+            } else {
+              showToast("Bildirim izni verilmedi.");
+            }
+          });
+        }
+      }
+
+      function resetAllAppData() {
+        if (confirm("Tüm zikir sayaçları, yer imleri ve favoriler sıfırlansın mı?")) {
+          localStorage.clear();
+          location.reload();
+        }
+      }
+
+      function shareText(type) {
+        let text = "";
+        if (type === 'daily-ayah') {
+          text = `Günün Ayeti: "Şüphesiz güçlükle beraber bir kolaylık vardır." (İnşirah, 5-6) - NUR Uygulamasından paylaşıldı.`;
+        } else {
+          text = `Günün Duası: "Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver..." (Bakara, 201) - NUR Uygulamasından paylaşıldı.`;
+        }
+
+        if (navigator.share) {
+          navigator.share({ title: 'NUR - Dua & Kuran', text: text });
+        } else {
+          navigator.clipboard.writeText(text);
+          showToast("Metin panoya kopyalandı!");
+        }
+      }
+
+      function shareAyah(surahName, ayahNum, trText) {
+        const text = `${surahName} Suresi, ${ayahNum}. Ayet:\n\n"${trText}"\n\nNUR Uygulamasından Paylaşıldı.`;
+        if (navigator.share) {
+          navigator.share({ title: `${surahName} ${ayahNum}`, text: text });
+        } else {
+          navigator.clipboard.writeText(text);
+          showToast("Ayet metni kopyalandı!");
+        }
+      }
+
+      function shareApp() {
+        if (navigator.share) {
+          navigator.share({
+            title: 'NUR – Dua & Kuran',
+            text: 'Kuran-ı Kerim, Sahih Dualar, Zikirmatik ve Ezan Vakitleri bir arada. Ücretsiz ve reklamsız.',
+            url: window.location.href
+          });
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          showToast("Uygulama bağlantısı kopyalandı.");
+        }
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('toast-msg');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2400);
+      }
+
+      function setupBackButton() {
+        window.addEventListener('popstate', () => {
+          const reader = document.getElementById('quran-reader-modal');
+          const duaModal = document.getElementById('dua-detail-modal');
+          if (reader && reader.classList.contains('open')) {
+            closeReader();
+          } else if (duaModal && duaModal.classList.contains('open')) {
+            closeDuaDetail();
+          }
+        });
+      }
+
+      return {
+        init,
+        switchTab,
+        filterSurahs,
+        openSurahReader,
+        closeReader,
+        getCurrentSurah,
+        bookmarkCurrentSurah,
+        setLastReadPosition,
+        resumeLastRead,
+        saveAyahFavorite,
+        shareAyah,
+        filterDuas,
+        searchDuas,
+        openDuaDetail,
+        closeDuaDetail,
+        toggleModalDuaFavorite,
+        shareModalDua,
+        toggleDuaFav,
+        incrementTasbih,
+        resetTasbih,
+        changeDhikr,
+        setTarget,
+        toggleVibration,
+        toggleSound,
+        changeCity,
+        toggleTheme,
+        changeFontSize,
+        toggleSettingVibration,
+        toggleNotifications,
+        toggleFavoriteCurrentVerse,
+        filterFavorites,
+        removeFavorite,
+        shareText,
+        shareApp,
+        resetAllAppData
+      };
+    })();
+
+    document.addEventListener('DOMContentLoaded', app.init);
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>
